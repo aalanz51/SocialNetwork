@@ -1,14 +1,8 @@
-const { user } = require("../models");
-
-const userCount = async () =>
-  user
-    .aggregate()
-    .count("userCount")
-    .then((numberOfUsers) => numberOfUsers);
+const { User } = require("../models");
 
 module.exports = {
   getUsers(req, res) {
-    user
+    User
       .find()
       .then(async (users) => {
         const userObject = {
@@ -22,7 +16,7 @@ module.exports = {
       });
   },
   getSingleUser(req, res) {
-    user
+    User
       .findOne({ _id: req.params.userId })
       .select("-__v")
       .then(async (user) =>
@@ -36,13 +30,13 @@ module.exports = {
       });
   },
   createUser(req, res) {
-    user
+    User
       .create(req.body)
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
   updateUser(req, res) {
-    user
+    User
       .findOneAndUpdate(
         { _id: req.params.userId },
         { $set: req.body },
@@ -57,7 +51,7 @@ module.exports = {
   },
 
   deleteUser(req, res) {
-    user
+    User
       .findOneAndDelete({ _id: req.params.userId })
       .then((user) =>
         !user
@@ -71,7 +65,7 @@ module.exports = {
   addFriend(req, res) {
     console.log("Friend Added!");
     console.log(req.body);
-    user
+    User
       .findOneAndUpdate(
         { _id: req.params.userId },
         { $addToSet: { friends: req.params.friendId } },
@@ -85,7 +79,7 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   removeFriend(req, res) {
-    user
+    User
       .findOneAndUpdate(
         { _id: req.params.userId },
         { $pull: { friends: req.params.friendId } },
